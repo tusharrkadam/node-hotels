@@ -4,12 +4,22 @@ const express = require('express')
 const app = express();
 const db=require("./db");
 const bodyParser =require("body-parser");
+const passport = require('passport');
 
 
 app.use(bodyParser.json())
 const Person=require("./models/Person");
 
 const PORT=3000
+
+const logRequest = (req, res, next) => {
+    console.log(`[${new Date().toLocaleString()}] Request Made to : ${req.originalUrl}`);
+    next(); // Move on to the next phase
+}
+app.use(logRequest);
+
+app.use(passport.initialize());
+const localAuthMiddleware = passport.authenticate('local', {session: false})
 
 app.get("/",function(req,res){
     res.send("welcome to my hotels what can i help you ")
